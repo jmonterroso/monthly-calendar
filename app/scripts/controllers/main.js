@@ -57,9 +57,11 @@ angular.module('montlyCalendarApp')
     vm.submitForm = function () {
       var startDate = moment(vm.startDate, 'MM-DD-YYYY');
       var endDate = moment(vm.startDate, "MM-DD-YYYY").add(vm.numberOfDays, 'days');
-
       $scope.eventSources = [];
       $scope.events.splice(0);
+      $timeout(function () {
+        uiCalendarConfig.calendars['monthlyCalendar'].fullCalendar('gotoDate', startDate);
+      })
       hollidayService.getHollidays({
         country: vm.countryCode,
         year: startDate.year()
