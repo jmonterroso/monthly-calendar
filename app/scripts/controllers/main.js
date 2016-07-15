@@ -8,27 +8,27 @@
  * Controller of the montlyCalendarApp
  */
 angular.module('montlyCalendarApp')
-  .controller('MainCtrl', function ($scope, uiCalendarConfig, hollidayService) {
+  .controller('MainCtrl', function ($scope, uiCalendarConfig, hollidayService, $timeout) {
     var vm = this;
     $scope.eventSources = [];
     $scope.events = [];
     vm.countryCode = 'US';
     /* config object */
-    $scope.uiConfig = {
-      calendar:{
-        height: 450,
-        editable: true,
-        header:{
-          left: 'title',
-          center: '',
-          right: 'today prev,next'
-        },
-        // eventClick: $scope.alertOnEventClick,
-        // eventDrop: $scope.alertOnDrop,
-        // eventResize: $scope.alertOnResize,
-        // eventRender: $scope.eventRender
-      }
-    };
+    // $scope.uiConfig = {
+    //   calendar:{
+    //     height: 450,
+    //     editable: true,
+    //     header:{
+    //       left: 'title',
+    //       center: '',
+    //       right: 'today prev,next'
+    //     },
+    //     // eventClick: $scope.alertOnEventClick,
+    //     // eventDrop: $scope.alertOnDrop,
+    //     // eventResize: $scope.alertOnResize,
+    //     // eventRender: $scope.eventRender
+    //   }
+    // };
     $scope.supportedCountries  = {
       BE:'Belgium',
       BG:'Bulgaria',
@@ -74,9 +74,9 @@ angular.module('montlyCalendarApp')
               title: singleHoliday.name,
               start: moment(singleHoliday.date, 'YYYY-MM-DD').toDate(),
               allDay: true,
-              stick : true
+              stick : true,
+              type: 'holiday'
             };
-            console.log(holidayEvent, 'holidayEvent '); //deleteinbuild
             $scope.events.push(holidayEvent);
 
           }
@@ -95,29 +95,34 @@ angular.module('montlyCalendarApp')
 
 
 
-    vm.uiConfig = {
+    $scope.uiConfig = {
       calendar:{
         height: 450,
         editable: true,
-        header:{
-          left: 'month basicWeek basicDay agendaWeek agendaDay',
-          center: 'title',
-          right: 'today prev,next'
+
+        dayRender: function (date, cell) {
+          console.log(date, 'date '); //deleteinbuild
         },
         dayClick: $scope.alertEventOnClick,
-        eventDrop: $scope.alertOnDrop,
-        eventResize: $scope.alertOnResize
+        eventDrop: function () {
+          console.log('bioy', arguments); //deleteinbuild
+        },
+        eventResize: $scope.alertOnResize,
+        dayRender: function (date, cell) {
+
+          // cell.css("background-color", "red");
+        },
+        eventRender: function (date, cell) {
+          console.log(date.type, 'date.type '); //deleteinbuild
+          if (date.type === 'holiday'){
+            cell.css('background-color', 'orange');
+          }
+          console.log(arguments, 'arguments '); //deleteinbuild
+
+        },
       }
     };
 
-    // $scope.events = [
-    //   {title: 'All Day Event',start: new Date(y, m, 1)},
-    //   {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
-    //   {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
-    //   {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
-    //   {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
-    //   {title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29),url: 'http://google.com/'}
-    // ];
 
 
     $scope.eventSources = [$scope.events];

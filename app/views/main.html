@@ -13,7 +13,7 @@
     </select>
   </div>
   <button type="submit" class="btn btn-primary" ng-disabled="monthlyDateForm.$invalid">Submit</button>
-  <div ui-calendar="uiConfig.calendar" class="span8 calendar" calendar="monthlyCalendar" ng-model="eventSources"></div>
+  <div  calendar-watch-event="main.checkEvent(event)" ui-calendar="uiConfig.calendar" class="span8 calendar" id="monthlyCalendar" calendar="monthlyCalendar" ng-model="eventSources"></div>
 
 
 </form>
