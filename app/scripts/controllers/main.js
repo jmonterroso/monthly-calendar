@@ -8,10 +8,11 @@
  * Controller of the montlyCalendarApp
  */
 angular.module('montlyCalendarApp')
-  .controller('MainCtrl', function ($scope, uiCalendarConfig) {
+  .controller('MainCtrl', function ($scope, uiCalendarConfig, hollidayService) {
     var vm = this;
     $scope.eventSources = [];
     $scope.events = [];
+    vm.countryCode = 'US';
     /* config object */
     $scope.uiConfig = {
       calendar:{
@@ -28,19 +29,66 @@ angular.module('montlyCalendarApp')
         // eventRender: $scope.eventRender
       }
     };
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
-    vm.submitForm = function () {
-      $scope.eventSources = [];
+    $scope.supportedCountries  = {
+      BE:'Belgium',
+      BG:'Bulgaria',
+      BR:'Brazil',
+      CA:'Canada',
+      CZ:'Czech Republic',
+      DE:'Germany',
+      ES:'Spain',
+      FR:'France',
+      GB:'United Kingdom',
+      GT:'Guatemala',
+      HR:'Croatia',
+      HU:'Hungary',
+      ID:'Indonesia',
+      IN:'India',
+      IT:'Italy',
+      NL:'Netherlands',
+      NO:'Norway',
+      PL:'Poland',
+      PR:'Puerto Rico',
+      SI:'Slovenia',
+      SK:'Slovakia',
+      US:'United States',
+    };
 
+    vm.submitForm = function () {
       var startDate = moment(vm.startDate, 'MM-DD-YYYY');
       var endDate = moment(vm.startDate, "MM-DD-YYYY").add(vm.numberOfDays, 'days');
+
+      $scope.eventSources = [];
+      $scope.events.splice(0);
+      hollidayService.getHollidays({
+        country: vm.countryCode,
+        year: startDate.year()
+      }).then(function (data) {
+        var holidays = data.data.holidays;
+        for (var i in holidays){
+            var holiday = holidays[i];
+
+          for (var j = 0, len = holiday.length; j < len; j++) {
+            var singleHoliday = holiday[j];
+            var holidayEvent = {
+              title: singleHoliday.name,
+              start: moment(singleHoliday.date, 'YYYY-MM-DD').toDate(),
+              allDay: true,
+              stick : true
+            };
+            console.log(holidayEvent, 'holidayEvent '); //deleteinbuild
+            $scope.events.push(holidayEvent);
+
+          }
+        }
+
+
+      });
       var event = {
         start: startDate.toDate(),
         end: endDate.toDate(),
-        allDay: true
+        allDay: true,
+        stick : true
       };
       $scope.events.push(event);
     };
