@@ -61,7 +61,7 @@ angular.module('montlyCalendarApp')
       $scope.events.splice(0);
       $timeout(function () {
         uiCalendarConfig.calendars['monthlyCalendar'].fullCalendar('gotoDate', startDate);
-      })
+      });
       hollidayService.getHollidays({
         country: vm.countryCode,
         year: startDate.year()
@@ -103,23 +103,19 @@ angular.module('montlyCalendarApp')
         editable: true,
 
         dayRender: function (date, cell) {
-          console.log(date, 'date '); //deleteinbuild
+          console.log(date, 'date ', cell); //deleteinbuild
         },
         dayClick: $scope.alertEventOnClick,
         eventDrop: function () {
           console.log('bioy', arguments); //deleteinbuild
         },
         eventResize: $scope.alertOnResize,
-        dayRender: function (date, cell) {
 
-          // cell.css("background-color", "red");
-        },
         eventRender: function (date, cell) {
           console.log(date.type, 'date.type '); //deleteinbuild
           if (date.type === 'holiday'){
             cell.css('background-color', 'orange');
           }
-          console.log(arguments, 'arguments '); //deleteinbuild
 
         },
       }

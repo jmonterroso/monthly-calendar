@@ -15,5 +15,5 @@ angular.module('montlyCalendarApp')
     this.getHollidays = function (payload) {
       var url = 'https://holidayapi.com/v1/holidays?key='+this.apiKey + '&country=' + payload.country + '&year=' + payload.year;
       return $http.get(url);
-    }
+    };
   });
